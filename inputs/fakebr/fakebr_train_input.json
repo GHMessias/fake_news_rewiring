@@ -7,7 +7,18 @@
     "dm_mean" : 1,
     "dm_concat" : 0,
     "dm" : 1,
-    "load": false,
-    "save_model": true,
-    "save_model_path": "models/word_embedding_models"
+    "path_true" : "datasets/processed/FakeBr/true",
+    "path_fake" : "datasets/processed/FakeBr/fake",
+    "load_model": true,
+    "save_model": false,
+    "model_path": "models/word_embedding_models/fake_br_d2v_model",
+    "k" : 5,
+    "positive_class" : 1,
+    "rate" : 0.1,
+    "L" : 2,
+    "alpha_psrb" : 0.2,
+    "beta_psrb" : 0.8,
+    "gamma_psrb" : 2,
+    "name": "FakeBr"
+
 }

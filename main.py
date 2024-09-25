@@ -2,9 +2,9 @@
 Main file of the experiments
 '''
 
-from runners.doc2vec import doc2vec_matrix
 from utils.arguments import parse_arguments, load_config_from_json
 from utils.dataset_transform import process_data
+from runners.experiments import experiments
 
 if __name__ == '__main__':
     args = parse_arguments()
@@ -17,8 +17,10 @@ if __name__ == '__main__':
     if args.process_data:
         process_data(args.process_input_path, args.process_output_path, args.language)
 
-    if args.train:
-        'oi'
+    if args.run_experiments:
+        experiments(args)
+        
+
 
     
 

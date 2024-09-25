@@ -75,33 +75,7 @@ def process_data(input_path, output_path, stopwords_language = 'portuguese'):
 
     process_files_in_directory(input_directory, output_directory)
 
-# if args.compute_mean:
+    print('files processed')
 
-#     def count_words_in_file(file_path):
-#         with open(file_path, 'r', encoding='utf-8') as file:
-#             content = file.read()
-#             words = content.split()
-#             return len(words)
-
-#     def calculate_average_words(directory_path):
-#         total_words = 0
-#         file_count = 0
-
-#         # Itera por todos os arquivos da pasta
-#         for filename in os.listdir(directory_path):
-#             if filename.endswith('.txt'):
-#                 file_path = os.path.join(directory_path, filename)
-#                 word_count = count_words_in_file(file_path)
-#                 total_words += word_count
-#                 file_count += 1
-
-#         if file_count == 0:
-#             return 0  # Evita divisão por zero
-
-#         return total_words / file_count
-
-#     # Exemplo de uso
-#     directory = args.input_path
-#     average = calculate_average_words(directory)
-#     print(f'A média de palavras por arquivo é: {average:.2f}')
+    return
 
