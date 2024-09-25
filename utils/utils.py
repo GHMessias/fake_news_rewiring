@@ -9,6 +9,8 @@ from sklearn.neighbors import NearestNeighbors
 import networkx as nx
 from torch_geometric.data import Data
 from torch_geometric.utils import from_networkx
+from models.inference_models.models import *
+from torch_geometric.nn import GAE
 
 # def organize_data(data, L, rate, positive_class, alpha, beta, gamma, name):
 def organize_data(data, args):
@@ -135,3 +137,37 @@ def create_knn_graph(vectors, args):
                 G.add_edge(i, neighbor_index, weight=distances[i][j+1])
     
     return G
+
+def get_model(model_name, data, args):
+    '''
+    Function to return the model given the model_name. To add new models, please create a new class at models.models file.
+
+    Parameter:
+    model_name (str): String that represents the model
+    data (pytorch.data.data): data object to create the model
+    kwargs: L (int): number of iterations that the data contains for the rewiring method
+            hid_dim (int): number of hidden neurons
+            out_dim (int): number of output neurons
+            activation_function (builtin_function_or_method): activation function (default torch.relu)
+
+    Returns:
+    model
+    '''
+    if model_name == 'CCRNE':
+        return CCRNE(data)
+    if model_name == 'LP_PUL':
+        # return LP_PUL(data, graph = to_networkx(data, to_undirected = True))
+        return LP_PUL(data)
+    if model_name == 'MCLS':
+        return MCLS(data)
+    if model_name == 'OCSVM':
+        return OCSVM(data)
+    if model_name == 'PU_LP':
+        return PU_LP(data)
+    if model_name == 'RCSVM':
+        return RCSVM(data)
+    if model_name == 'RGCN':
+        return GAE(encoder = RGCN(data.x.shape[1], hidden_size = args.hid_dim, output_size=args.out_dim, L = args.L))
+    if model_name == 'GCN':
+        return GAE(encoder = GCN(data.x.shape[1], hidden_channels=args.hid_dim, out_channels=args.out_dim))
+

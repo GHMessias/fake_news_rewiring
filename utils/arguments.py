@@ -43,10 +43,24 @@ def parse_arguments():
     # PUL config
     parser.add_argument("--positive_class", type = int, default = 1, help = "Positive class in PUL problem")
     parser.add_argument("--rate", type = float, default=0.1, help = "Rate of positive examples")
+
+    # PSRB config
     parser.add_argument("--L", type = int, default = 2, help = "parameter L (number of generated graphs) of PSRB algorithm")
     parser.add_argument("--alpha_psrb", type = float, default = 0.2, help = "parameter alpha (power of distance) of PSRB algoritm")
     parser.add_argument("--beta_psrb", type = float, default = 0.6, help = "parameter beta (power of number of positives) of PSRB algoritm")
     parser.add_argument("--gamma_psrb", type = float, default = 2, help = "parameter alpha (power of generated graphs) of PSRB algoritm")
+
+    # GCN and RGCN params
+    parser.add_argument("--hid_dim", type = int, default = 64, help = "Hidden dimension number of neurons (RGCN and GCN for GAE)")
+    parser.add_argument("--out_dim", type = int, default = 16, help = "Output dimension number of neurons (RGCN and GCN for GAE)")
+    parser.add_argument("--lr", type = float, default = 0.01, help = "GAE (RGCN) and GAE (GCN) learning rate")
+    parser.add_argument("--epochs_gae", type = int, default = 200, help = "GAE (RGCN) and GAE (GCN) epochs to train")
+
+
+
+    # models
+    parser.add_argument("--models", nargs='+', default = ["RCSVM", "CCRNE", "MCLS", "OCSVM", "PU_LP", "LP_PUL", "RGCN", "GCN"])
+
 
     return parser.parse_args()
 
