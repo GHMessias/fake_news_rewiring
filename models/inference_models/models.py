@@ -34,7 +34,7 @@ class RGCN_layer(torch.nn.Module):
         return out
 
 class RGCN(torch.nn.Module):
-    def __init__(self, input_size, hidden_size, output_size, L, output_activation_function = torch.relu):
+    def __init__(self, input_size, hidden_size, output_size, L, lr, output_activation_function = torch.relu):
         super(RGCN, self).__init__()
         self.layer1 = RGCN_layer(input_size, hidden_size, L)
         self.layer2 = RGCN_layer(hidden_size, output_size, L)
@@ -50,19 +50,14 @@ class RGCN(torch.nn.Module):
         x = self.layer2(x, rewiring_graph_list)
         return x
     
-class ExtendedRGCN(torch.nn.Module):
-    def __init__(self, base_model, add_layer_dim, output_activation_function = torch.softmax):
-        super(ExtendedRGCN, self).__init__()
-        self.base_model = base_model
-        # self.added_layer = RGCN_layer(base_model.output_size, add_layer_dim, base_model.L)
-        # self.added_layer = GCNConv(base_model.output_size, add_layer_dim)
-        self.added_layer = torch.nn.Linear(base_model.output_size, add_layer_dim)
-        self.output_activation_function = output_activation_function
-
-    def forward(self, x, rewiring_graph_list):
-        x = self.base_model(x, rewiring_graph_list)
-        # x = self.output_activation_function(self.added_layer(x, rewiring_graph_list), dim = 1)
-        # x = self.output_activation_function(self.added_layer(x, rewiring_graph_list[0].edge_index), dim = 1)
-        x = self.output_activation_function(self.added_layer(x), dim = 1)
-
-        return x
+    def train(self, data, optimizer, epochs, verbose = False):
+        for e in range(epochs):
+            optimizer.zero_grad()
+            H_L = self.encode(data.x.float(), data.graph_list)
+            loss = self.recon_loss(H_L, data.graph_list[-1].edge_index)
+            if verbose:
+                print(f'epoch {e+1} | loss {loss.item()}', end = '\r')
+            loss.backward()
+            optimizer.step()
+        print('\n')
+        return

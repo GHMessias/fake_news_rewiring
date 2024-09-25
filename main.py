@@ -17,6 +17,11 @@ if __name__ == '__main__':
     if args.process_data:
         process_data(args.process_input_path, args.process_output_path, args.language)
 
+    if args.train:
+        'oi'
+
+    
+
     
 
 

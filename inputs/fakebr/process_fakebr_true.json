@@ -1,0 +1,5 @@
+{
+    "process_data": true,
+    "process_input_path": "datasets/raw/Fake.br-Corpus/size_normalized_texts/true",
+    "process_output_path": "datasets/processed/FakeBr/true"
+}
