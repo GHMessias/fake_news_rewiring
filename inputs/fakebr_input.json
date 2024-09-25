@@ -1,3 +1,13 @@
 {
-    
+    "vector_size" : 500,
+    "window" : 8,
+    "alpha" : 0.025,
+    "min_alpha": 0.001,
+    "epochs" : 100,
+    "dm_mean" : 1,
+    "dm_concat" : 0,
+    "dm" : 1,
+    "load": false,
+    "save_model": true,
+    "save_model_path": "models/word_embedding_models"
 }
