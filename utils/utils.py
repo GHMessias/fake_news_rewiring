@@ -11,6 +11,7 @@ from torch_geometric.data import Data
 from torch_geometric.utils import from_networkx
 from models.inference_models.models import *
 from torch_geometric.nn import GAE
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
 
 # def organize_data(data, L, rate, positive_class, alpha, beta, gamma, name):
 def organize_data(data, args):
@@ -171,3 +172,10 @@ def get_model(model_name, data, args):
     if model_name == 'GCN':
         return GAE(encoder = GCN(data.x.shape[1], hidden_channels=args.hid_dim, out_channels=args.out_dim))
 
+def evaluate(y_true, y_pred, pos_label = 1, verbose = True):
+    acc =  round(accuracy_score(y_true, y_pred), 4)
+    f1 = round(f1_score(y_true, y_pred, pos_label = pos_label),4)
+    recall = round(recall_score(y_true, y_pred, pos_label = pos_label),4)
+    precision = round(precision_score(y_true, y_pred, pos_label=pos_label),4)
+
+    return {'acc':[acc], 'f1':[f1], 'recall':[recall], 'precision':[precision]}

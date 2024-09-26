@@ -20,7 +20,7 @@
     "beta_psrb" : 0.8,
     "gamma_psrb" : 2,
     "name": "FakeBr",
-    "models": ["GCN", "RGCN"],
+    "models":["RCSVM", "CCRNE", "MCLS", "OCSVM", "PU_LP", "LP_PUL", "RGCN", "GCN"],
     "lr" : 0.01,
     "epochs_gae": 200,
     "hid_dim" : 64,
