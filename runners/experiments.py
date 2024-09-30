@@ -52,6 +52,14 @@ def pu_classification(data, model):
     '''
     Função responsável por treinar os modelos a partir da segunda etapa, os dados negativos em data.N representam os elementos inferidos. 
     '''
+    # For OCC models or 1-step models
+    if isinstance(model, OCSVM):
+        model.train()
+        y_pred = model.predict()
+        y_pred = np.where(y_pred == -1, 0, y_pred)
+        print(np.unique(y_pred))
+        return pd.DataFrame(evaluate(data.y[data.test_mask].detach().numpy(), y_pred[data.test_mask]))
+
     for element in data.N:
         data.infered_y[element] = 0
 
@@ -118,42 +126,44 @@ def pu_classification(data, model):
         return pd.DataFrame(evaluate(data.y[data.test_mask].detach().numpy(), y_pred[data.test_mask].detach().numpy()))
         # evaluate(data.y[data.test_mask].detach().numpy(), y_pred[data.test_mask].detach().numpy())
 
-    if isinstance(model, OCSVM):
-        model.train()
-        y_pred = model.predict()
-        y_pred = np.where(y_pred == -1, 0, y_pred)
-        print(np.unique(y_pred))
-        return pd.DataFrame(evaluate(data.y[data.test_mask].detach().numpy(), y_pred[data.test_mask]))
-
 def experiments(args):
     # Organizar os dados
     df_pu_classify = pd.DataFrame()
     data = text_to_data(args)
     data = organize_data(data, args)
-    print(data.x[0])
+    # Verificando a quantidade de elementos conexos de cada grafo de rewiring e do grafo original
+    for graph in data.graph_list:
+        temp = to_networkx(graph, to_undirected=True)
+        components = nx.connected_components(temp)
+        print(f"quantidade de componentes conexas {len(list(components))}")
     print(data.graph_list)
 
     # treinar os modelos
-    for model_name in args.models:
-        model = get_model(model_name, data, args)
-        print(model)
+    model = get_model(args.model, data, args)
+    # print(model)
 
-        if model_name in ['RGCN', 'GCN']:
-            optimizer = torch.optim.Adam(params=model.parameters(), lr = 0.001) 
-            train_gae(data, model, optimizer, epochs = args.epochs_gae, verbose = True)
-            data.N = gae_negative_inference(data, model, num_neg = len(data.P))
-                
-        if model_name in ["RCSVM", "CCRNE", "MCLS", "PU_LP", "LP_PUL"]:
-            model.train()
-            data.N = model.negative_inference(num_neg = len(data.P))
-        
-        # salvar os resultados
-        df_1 = pu_classification(data, model)
-        df_1['model'] = model_name
-        df_1['dataset'] = data.name
-        df_1['rate'] = args.rate
+    if args.model in ['RGCN', 'GCN']:
+        optimizer = torch.optim.Adam(params=model.parameters(), lr = 0.001) 
+        train_gae(data, model, optimizer, epochs = args.epochs_gae, verbose = True)
+        data.N = gae_negative_inference(data, model, num_neg = len(data.P))
+            
+    if args.model in ["RCSVM", "CCRNE", "MCLS", "PU_LP", "LP_PUL"]:
+        model.train()
+        data.N = model.negative_inference(num_neg = len(data.P))
+    
+    # salvar os resultados
+    df_1 = pu_classification(data, model)
+    df_1['model'] = args.model
+    df_1['dataset'] = data.name
+    df_1['rate'] = args.rate
+
+    # For one-step methods
+    try:
         df_1['length negatives'] = len(data.N)
-        df_1['length positives'] = len(data.P)
-        df_pu_classify = pd.concat([df_pu_classify, df_1], ignore_index=True)
-        
-        df_pu_classify.to_csv(f'results/pu_classify_results_{data.name}.csv')
+    except:
+        df_1['length negatives'] = None
+
+    df_1['length positives'] = len(data.P)
+    df_pu_classify = pd.concat([df_pu_classify, df_1], ignore_index=True)
+    
+    df_pu_classify.to_csv(f'results/pu_classify_results_{data.name}_{args.model}.csv')

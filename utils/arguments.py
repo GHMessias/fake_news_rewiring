@@ -35,6 +35,7 @@ def parse_arguments():
     parser.add_argument("--model_path", type = str, help = "Directory to save the model")
     parser.add_argument("--path_true", type = str, help = 'Path of true txt examples')
     parser.add_argument("--path_fake", type = str, help = 'Path of fake txt examples')
+    parser.add_argument("--min_count", type = int, default = 1, help = "Ignores all words with total frequency lower than this.")
 
     # graph dataset config
     parser.add_argument("--graph_type", type = str, default = 'knn', help = "Type of graph to create from data. Available options: ['knn']")
@@ -59,7 +60,8 @@ def parse_arguments():
 
 
     # models
-    parser.add_argument("--models", nargs='+', default = ["RCSVM", "CCRNE", "MCLS", "OCSVM", "PU_LP", "LP_PUL", "RGCN", "GCN"])
+    # parser.add_argument("--models", nargs='+', default = ["RCSVM", "CCRNE", "MCLS", "OCSVM", "PU_LP", "LP_PUL", "RGCN", "GCN"])
+    parser.add_argument('--model', type = str, help = "str that represents the model in models.inference_models.models.py file")
 
 
     return parser.parse_args()

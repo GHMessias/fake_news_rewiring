@@ -43,7 +43,7 @@ def phi(d, n, alpha, beta, l, gamma = 2):
     except:
         return 0
 
-def rewiring(graph, L, P, alpha = 0.2, beta = 0.5, gamma = 2):
+def rewiring(graph, L, P, alpha, beta, gamma):
     '''
     Function that apply the Positive and Sequential Rewiring via Breadth Search
 

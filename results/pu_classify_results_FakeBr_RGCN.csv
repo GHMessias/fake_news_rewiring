@@ -1,0 +1,2 @@
+,acc,f1,recall,precision,model,dataset,rate,length negatives,length positives
+0,0.4825,0.575,0.7392,0.4705,RGCN,FakeBr,0.1,360,360

@@ -105,13 +105,21 @@ def doc2vec_matrix(args):
 def text_to_data(args):
     # Função para transformar os arquivos de texto tratados em um data object do pytorch. Essa função também aplica a transformação em grafo
     data_matrix, labels = doc2vec_matrix(args)
-    
-    # Transformando o conjunto de dados em grafo
-    G = create_knn_graph(data_matrix, args)
 
     # Creating the pytorch.data.Data object
-    x = torch.tensor(data_matrix)
-    y = torch.tensor(labels)
+    x = data_matrix
+    y = labels
+
+    combined = list(zip(x,y))
+    random.shuffle(combined)
+
+    x,y = zip(*combined)
+
+    x = torch.tensor(list(x))
+    y = torch.tensor(list(y))
+    
+    # Transformando o conjunto de dados em grafo
+    G = create_knn_graph(x, args)
 
     edge_index = from_networkx(G).edge_index
 
