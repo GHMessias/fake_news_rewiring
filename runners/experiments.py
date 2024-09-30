@@ -130,7 +130,9 @@ def experiments(args):
     # Organizar os dados
     df_pu_classify = pd.DataFrame()
     data = text_to_data(args)
+    return
     data = organize_data(data, args)
+
     # Verificando a quantidade de elementos conexos de cada grafo de rewiring e do grafo original
     for graph in data.graph_list:
         temp = to_networkx(graph, to_undirected=True)

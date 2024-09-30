@@ -1,0 +1,17 @@
+{
+    "representation_path" : "datasets-Projeto/datasets/complete datasets/FakeBr/D2V representations/Doc2Vec_model=both_method=average_dim_size=500_num_max_epochs=100_window_size=8_num_threads=4_min_count=1_alpha=0.025_min_alpha=0.0001.rep",
+    "representation_label_path" : "datasets-Projeto/datasets/complete datasets/FakeBr/Dataset/labels.npy",
+    "k" : 4,
+    "positive_class" : 1,
+    "rate" : 0.1,
+    "L" : 2,
+    "alpha_psrb" :0.2,
+    "beta_psrb" : 0.8,
+    "gamma_psrb" : 2,
+    "name": "FakeBr",
+    "model":"RGCN",
+    "lr" : 0.01,
+    "epochs_gae": 200,
+    "hid_dim" : 64,
+    "out_dim" : 16
+}

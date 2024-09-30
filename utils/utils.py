@@ -12,6 +12,7 @@ from torch_geometric.utils import from_networkx
 from models.inference_models.models import *
 from torch_geometric.nn import GAE
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
+from utils.bibliotecas import *
 
 # def organize_data(data, L, rate, positive_class, alpha, beta, gamma, name):
 def organize_data(data, args):
@@ -104,26 +105,25 @@ def doc2vec_matrix(args):
 
 def text_to_data(args):
     # Função para transformar os arquivos de texto tratados em um data object do pytorch. Essa função também aplica a transformação em grafo
-    data_matrix, labels = doc2vec_matrix(args)
-
-    # Creating the pytorch.data.Data object
-    x = data_matrix
-    y = labels
-
-    combined = list(zip(x,y))
-    random.shuffle(combined)
-
-    x,y = zip(*combined)
-
-    x = torch.tensor(list(x))
-    y = torch.tensor(list(y))
+    # Função para pegar os arquivos de data e transformar em um dataset pytorch
     
+    doc2vec_rep = load_representation(args.representation_path)
+
+    features = doc2vec_rep.text_vectors
+    print(len(features))
+    print(len(features[0]))
+
+    x = torch.tensor(doc2vec_rep.text_vectors)
+    y = np.load(args.representation_label_path)
+    
+
     # Transformando o conjunto de dados em grafo
     G = create_knn_graph(x, args)
 
     edge_index = from_networkx(G).edge_index
 
     data = Data(x = x, y = y, edge_index = edge_index)
+    print(data)
     return data
 
 
@@ -137,7 +137,7 @@ def create_knn_graph(vectors, args):
     
     if args.graph_type == 'knn':
         # Usando NearestNeighbors para encontrar os k vizinhos mais próximos
-        nbrs = NearestNeighbors(n_neighbors=args.k+1, algorithm='auto').fit(vectors)
+        nbrs = NearestNeighbors(n_neighbors=args.k, algorithm='auto').fit(vectors)
         distances, indices = nbrs.kneighbors(vectors)
         
         # Adiciona arestas entre os k vizinhos mais próximos
